@@ -1,3 +1,7 @@
+Assets = require 'assets'
+Grid = require 'grid'
+Colors = require 'colors'
+
 local graphics
 
 class Game
@@ -6,11 +10,17 @@ class Game
 
   new: =>
     import graphics from love
-    @font = graphics.newFont('kenpixel_mini.ttf', 16)
-    graphics.setFont(@font)
+
+    Assets\load!
+    graphics.setFont(Assets.font)
+
+    @grid = Grid(4, 4)
+
 
   update: (dt, time) =>
 
   draw: =>
-    graphics.setColor(0, 0, 255)
-    graphics.rectangle('fill', 100, 10, 100, 100)
+    graphics.setBackgroundColor(Colors.background)
+    graphics.clear!
+    graphics.translate(5, 5)
+    @grid\draw!
