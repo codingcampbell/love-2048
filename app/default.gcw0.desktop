@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=2048
+Comment=2048 for GCW
+Exec=run.sh
+X-OD-NeedsGSensor=true
+Icon=icon
+Categories=games;
