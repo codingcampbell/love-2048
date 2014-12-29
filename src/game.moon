@@ -5,9 +5,6 @@ Colors = require 'colors'
 local graphics
 
 class Game
-  WIDTH: 320
-  HEIGHT: 240
-
   new: =>
     import graphics from love
 
@@ -15,7 +12,6 @@ class Game
     graphics.setFont(Assets.font)
 
     @grid = Grid(4, 4)
-
 
   update: (dt, time) =>
 

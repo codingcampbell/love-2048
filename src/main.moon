@@ -1,3 +1,4 @@
+Constants = require 'constants'
 Game = require 'game'
 
 local scale, scissor, game
@@ -5,13 +6,13 @@ local scale, scissor, game
 import graphics from love
 
 resize = (w, h) ->
-  scaleW = w / Game.WIDTH
-  scaleH = h / Game.HEIGHT
+  scaleW = w / Constants.GAME_WIDTH
+  scaleH = h / Constants.GAME_HEIGHT
   scale = math.min(scaleW, scaleH)
   if scale > 1
     scale = math.floor(scale)
-  scaledW = scale * Game.WIDTH
-  scaledH = scale * Game.HEIGHT
+  scaledW = scale * Constants.GAME_WIDTH
+  scaledH = scale * Constants.GAME_HEIGHT
   scissor = { math.floor((w - scaledW) / 2), math.floor((h - scaledH) / 2), scaledW, scaledH }
 
 love.load = ->
@@ -35,7 +36,7 @@ love.draw = ->
   game\draw!
 
   graphics.setColor(255, 255, 255)
-  graphics.print(love.timer.getFPS!, Game.WIDTH - 30, 0)
+  graphics.print(love.timer.getFPS!, Constants.GAME_WIDTH - 30, 0)
 
   graphics.setScissor()
 

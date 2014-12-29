@@ -1,10 +1,10 @@
-Game = require 'game'
+Constants = require 'constants'
 
 love.conf = (t) ->
   with t.window
     .title = '2048'
-    .width = Game.WIDTH
-    .height = Game.HEIGHT
+    .width = Constants.GAME_WIDTH
+    .height = Constants.GAME_HEIGHT
     .resizable = true
     .fullscreen = false
     .vsync = true
