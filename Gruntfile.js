@@ -9,6 +9,13 @@ module.exports = function(grunt) {
       }
     },
 
+    'build-love': {
+      all: {
+        src: 'app',
+        dest: '../build/2048.love'
+      }
+    },
+
     luamin: {
       all: {
         files: {
@@ -59,6 +66,17 @@ module.exports = function(grunt) {
     grunt.util.spawn({
       cmd: 'mksquashfs',
       args: [this.data.src, this.data.dest, '-all-root', '-noappend', '-no-exports', '-no-xattrs']
+    }, this.async());
+  });
+
+  grunt.registerMultiTask('build-love', 'Build .love file', function () {
+    grunt.file.write(this.data.dest, '');
+    grunt.util.spawn({
+      cmd: 'zip',
+      args: ['-9', '-r', this.data.dest, '.'],
+      opts: {
+        cwd: this.data.src
+      }
     }, this.async());
   });
 
