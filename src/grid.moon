@@ -21,9 +21,11 @@ mergeCell = (fromCell, toCell) =>
     fromCell\setPow(fromCell.pow + 1)
     toCell\setPow(0)
     @moveCount += 1
+    @tileCount -= 1
 
 spawnRandomCell = =>
   getRandomEmptyCell(@)\setPow(random(1, 2))
+  @tileCount += 1
 
 mergeHoriz = (start, target, dir) =>
   for y = 1, @rows
@@ -54,14 +56,41 @@ alignTiles = =>
     for x = 1, @cols
       getCell(@, x, y)\setGridPosition(x - 1, y - 1)
 
+isGameOver = =>
+  if @tileCount < @cols * @rows
+    return false
+
+  local cell
+  for y = 1, @rows
+    for x = 1, @cols
+      cell = getCell(@, x, y)
+      if cell.pow != 0
+        if x > 1 and cell.pow == getCell(@, x - 1, y).pow
+          return false
+
+        if x < @cols and cell.pow == getCell(@, x + 1, y).pow
+          return false
+
+        if y > 1 and cell.pow == getCell(@, x, y - 1).pow
+          return false
+
+        if y < @rows and cell.pow == getCell(@, x, y + 1).pow
+          return false
+
+  return true
+
 moveStart = =>
   @moveCount = 0
 
-moveEnd =  =>
+moveEnd = =>
   alignTiles(@)
 
   if @moveCount > 0
     spawnRandomCell(@)
+
+  @gameOver = isGameOver(@)
+  if @gameOver
+    print('game over')
 
 class Grid
   new: (cols, rows) =>
@@ -74,6 +103,8 @@ class Grid
     @rows = rows
     @grid = {}
     @moveCount = 0
+    @tileCount = 0
+    @gameOver = false
 
     for y = 1, rows
       for x = 1, cols
