@@ -40,6 +40,12 @@ love.draw = ->
 
   graphics.setScissor()
 
+love.keypressed = (key) ->
+  if key == 'escape'
+    return love.event.push('quit')
+
+  game\keypressed(key)
+
 love.keyreleased = (key) ->
   if key == 'escape'
-    love.event.push('quit')
+    return love.event.push('quit')

@@ -20,3 +20,16 @@ class Game
     graphics.clear!
     graphics.translate(5, 5)
     @grid\draw!
+
+  keypressed: (key) =>
+    if key == 'left'
+      @grid\moveLeft!
+
+    if key == 'right'
+      @grid\moveRight!
+
+    if key == 'up'
+      @grid\moveUp!
+
+    if key == 'down'
+      @grid\moveDown!

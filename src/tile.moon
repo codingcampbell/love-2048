@@ -10,11 +10,14 @@ class Tile
     cellSize = Constants.CELL_SIZE
     cellOffset = cellSize + Constants.CELL_MARGIN
 
+    @setGridPosition(x, y)
+    @setPow(pow)
+
+  setGridPosition: (x, y) =>
     @x = x
     @y = y
     @tx = x * cellOffset
     @ty = y * cellOffset
-    @setPow(pow)
 
   setPow: (pow) =>
     @pow = pow
