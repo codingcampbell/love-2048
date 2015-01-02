@@ -16,26 +16,24 @@ swapCell = (x1, y1, x2, y2) =>
   @grid[(y1 - 1) * @cols + x1], @grid[(y2 - 1) * @cols + x2] = getCell(@, x2, y2), getCell(@, x1, y1)
   @moveCount += 1
 
+mergeCell = (fromCell, toCell) =>
+  if fromCell.pow != 0 and fromCell.pow == toCell.pow
+    fromCell\setPow(fromCell.pow + 1)
+    toCell\setPow(0)
+    @moveCount += 1
+
 spawnRandomCell = =>
   getRandomEmptyCell(@)\setPow(random(1, 2))
 
 mergeHoriz = (start, target, dir) =>
   for y = 1, @rows
     for x = start, target, -dir
-      cell = getCell(@, x + dir, y)
-      nextCell = getCell(@, x, y)
-      if cell.pow != 0 and cell.pow == nextCell.pow
-        cell\setPow(cell.pow + 1)
-        nextCell\setPow(0)
+      mergeCell(@, getCell(@, x + dir, y), getCell(@, x, y))
 
 mergeVert = (start, target, dir) =>
   for x = 1, @cols
     for y = start, target, -dir
-      cell = getCell(@, x, y + dir)
-      nextCell = getCell(@, x, y)
-      if cell.pow != 0 and cell.pow == nextCell.pow
-        cell\setPow(cell.pow + 1)
-        nextCell\setPow(0)
+      mergeCell(@, getCell(@, x, y + dir), getCell(@, x, y))
 
 shiftHoriz = (start, target, dir) =>
   for y = 1, @rows
