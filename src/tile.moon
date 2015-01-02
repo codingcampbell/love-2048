@@ -14,14 +14,20 @@ class Tile
     @y = y
     @tx = x * cellOffset
     @ty = y * cellOffset
+    @setPow(pow)
+
+  setPow: (pow) =>
     @pow = pow
     @value = math.pow(2, pow)
     @text = tostring(@value)
     @color = pow > 2 and Colors.white or Colors.text
     @background = Colors[pow + 1]
-    @textWidth = Assets.numbers[pow]\getWidth!
+    @textWidth = pow > 0 and Assets.numbers[pow]\getWidth! or 0
 
   draw: =>
+    if @pow == 0
+      return
+
     graphics.setColor(@background)
     graphics.rectangle('fill', @tx, @ty, cellSize, cellSize)
     graphics.setColor(@color)
