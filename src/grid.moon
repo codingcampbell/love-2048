@@ -14,6 +14,7 @@ getRandomEmptyCell = =>
 
 swapCell = (x1, y1, x2, y2) =>
   @grid[(y1 - 1) * @cols + x1], @grid[(y2 - 1) * @cols + x2] = getCell(@, x2, y2), getCell(@, x1, y1)
+  @moveCount += 1
 
 spawnRandomCell = =>
   getRandomEmptyCell(@)\setPow(random(1, 2))
@@ -55,9 +56,14 @@ alignTiles = =>
     for x = 1, @cols
       getCell(@, x, y)\setGridPosition(x - 1, y - 1)
 
+moveStart = =>
+  @moveCount = 0
+
 moveEnd =  =>
   alignTiles(@)
-  spawnRandomCell(@)
+
+  if @moveCount > 0
+    spawnRandomCell(@)
 
 class Grid
   new: (cols, rows) =>
@@ -69,6 +75,7 @@ class Grid
     @cols = cols
     @rows = rows
     @grid = {}
+    @moveCount = 0
 
     for y = 1, rows
       for x = 1, cols
@@ -78,24 +85,28 @@ class Grid
       spawnRandomCell(@)
 
   moveLeft: =>
+    moveStart(@)
     shiftHoriz(@, 1, @cols - 1, -1)
     mergeHoriz(@, 2, @cols, -1)
     shiftHoriz(@, 1, @cols - 1, -1)
     moveEnd(@)
 
   moveRight: =>
+    moveStart(@)
     shiftHoriz(@, @cols, 2, 1)
     mergeHoriz(@, @cols - 1, 1, 1)
     shiftHoriz(@, @cols, 2, 1)
     moveEnd(@)
 
   moveUp: =>
+    moveStart(@)
     shiftVert(@, 1, @rows - 1, -1)
     mergeVert(@, 2, @rows, -1)
     shiftVert(@, 1, @rows - 1, -1)
     moveEnd(@)
 
   moveDown: =>
+    moveStart(@)
     shiftVert(@, @rows, 2, 1)
     mergeVert(@, @rows - 1, 1, 1)
     shiftVert(@, @rows, 2, 1)
