@@ -27,7 +27,9 @@ mergeCell = (fromCell, toCell) =>
     @emit('score', fromCell.value)
 
 spawnRandomCell = =>
-  getRandomEmptyCell(@)\setPow(random() < 0.9 and 1 or 2)
+  cell = getRandomEmptyCell(@)
+  cell\setPow(random() < 0.9 and 1 or 2)
+  cell\tween('scale', 0.1, 1, 0.2)
   @tileCount += 1
 
 mergeHoriz = (start, target, dir) =>
