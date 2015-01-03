@@ -55,9 +55,12 @@ shiftVert = (start, target, dir) =>
         return shiftVert(@, start, target, dir)
 
 alignTiles = =>
+  local cell
   for y = 1, @rows
     for x = 1, @cols
-      getCell(@, x, y)\setGridPosition(x - 1, y - 1)
+      cell = getCell(@, x, y)
+      cell.x = (x - 1) * cellOffset
+      cell.y = (y - 1) * cellOffset
 
 isGameOver = =>
   if @tileCount < @cols * @rows
@@ -111,7 +114,7 @@ class Grid
 
     for y = 1, rows
       for x = 1, cols
-        @grid[(y - 1) * cols + x] = Tile(0, x - 1, y - 1)
+        @grid[(y - 1) * cols + x] = Tile(0, (x - 1) * cellOffset, (y - 1) * cellOffset)
 
     for x = 1, 2
       spawnRandomCell(@)

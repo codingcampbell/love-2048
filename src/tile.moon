@@ -1,23 +1,18 @@
 Assets = require 'assets'
 Colors = require 'colors'
 Constants = require 'constants'
-local graphics, cellSize, cellOffset, floor
+local graphics, cellSize, floor
 
 class Tile
   new: (pow, x, y) =>
     import graphics from love
     import floor from math
     cellSize = Constants.CELL_SIZE
-    cellOffset = cellSize + Constants.CELL_MARGIN
 
-    @setGridPosition(x, y)
-    @setPow(pow)
-
-  setGridPosition: (x, y) =>
     @x = x
     @y = y
-    @tx = x * cellOffset
-    @ty = y * cellOffset
+    @setPow(pow)
+    @scale = 1
 
   setPow: (pow) =>
     @pow = pow
@@ -31,7 +26,14 @@ class Tile
     if @pow == 0
       return
 
+    translate = (cellSize - cellSize * @scale) / 2
+    graphics.push!
+    graphics.translate(@x + translate, @y + translate)
+    graphics.scale(@scale, @scale)
+
     graphics.setColor(@background)
-    graphics.rectangle('fill', @tx, @ty, cellSize, cellSize)
+    graphics.rectangle('fill', 0, 0, cellSize, cellSize)
     graphics.setColor(@color)
-    graphics.draw(Assets.numbers[@pow], @tx + floor((cellSize - @textWidth) / 2), @ty + floor((cellSize / 2) - 5))
+    graphics.draw(Assets.numbers[@pow], floor((cellSize - @textWidth) / 2), floor((cellSize / 2) - 5))
+
+    graphics.pop!
