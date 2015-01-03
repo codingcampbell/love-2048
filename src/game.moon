@@ -17,10 +17,16 @@ class Game
     Assets\load!
     graphics.setFont(Assets.font)
 
+    @locked = false
     setScore(@, 0)
+
     @grid = Grid(4, 4)
+
     @grid\on 'score', Util.bind @, (score) =>
       setScore(@, @score + score)
+
+    @grid\on 'moveEnd', Util.bind @, =>
+      @locked = false
 
   update: (dt, time) =>
     @grid\update(dt, time)
@@ -40,14 +46,21 @@ class Game
     graphics.print(@score, panelX + math.floor((panelWidth - @scoreWidth) / 2), 20)
 
   keypressed: (key) =>
+    if @locked
+      return
+
     if key == 'left'
+      @locked = true
       @grid\moveLeft!
 
     if key == 'right'
+      @locked = true
       @grid\moveRight!
 
     if key == 'up'
+      @locked = true
       @grid\moveUp!
 
     if key == 'down'
+      @locked = true
       @grid\moveDown!

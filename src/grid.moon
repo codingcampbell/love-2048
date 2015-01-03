@@ -3,7 +3,7 @@ Colors = require 'colors'
 Tile = require 'tile'
 Util = require 'util'
 Events = require 'events'
-local graphics, random, cellSize, cellOffset
+local graphics, timer, random, cellSize, cellOffset
 
 getCell = (x, y) => @grid[(y - 1) * @cols + x]
 
@@ -58,11 +58,14 @@ shiftVert = (start, target, dir) =>
 
 alignTiles = =>
   local cell
+  duration = 0.1
+  @moveEndTime = timer.getTime! + duration
+
   for y = 1, @rows
     for x = 1, @cols
       cell = getCell(@, x, y)
-      cell.x = (x - 1) * cellOffset
-      cell.y = (y - 1) * cellOffset
+      cell\tween('x', cell.x, (x - 1) * cellOffset, cell.pow > 0 and duration or 0)
+      cell\tween('y', cell.y, (y - 1) * cellOffset, cell.pow > 0 and duration or 0)
 
 isGameOver = =>
   if @tileCount < @cols * @rows
@@ -91,8 +94,6 @@ moveStart = =>
   @moveCount = 0
 
 moveEnd = =>
-  alignTiles(@)
-
   if @moveCount > 0
     spawnRandomCell(@)
 
@@ -100,9 +101,11 @@ moveEnd = =>
   if @gameOver
     print('game over')
 
+  @emit('moveEnd')
+
 class Grid
   new: (cols, rows) =>
-    import graphics from love
+    import graphics, timer from love
     import random from love.math
     cellSize = Constants.CELL_SIZE
     cellOffset = cellSize + Constants.CELL_MARGIN
@@ -113,6 +116,7 @@ class Grid
     @moveCount = 0
     @tileCount = 0
     @gameOver = false
+    @moveEndTime = 0
 
     for y = 1, rows
       for x = 1, cols
@@ -126,32 +130,36 @@ class Grid
     shiftHoriz(@, 1, @cols - 1, -1)
     mergeHoriz(@, 2, @cols, -1)
     shiftHoriz(@, 1, @cols - 1, -1)
-    moveEnd(@)
+    alignTiles(@)
 
   moveRight: =>
     moveStart(@)
     shiftHoriz(@, @cols, 2, 1)
     mergeHoriz(@, @cols - 1, 1, 1)
     shiftHoriz(@, @cols, 2, 1)
-    moveEnd(@)
+    alignTiles(@)
 
   moveUp: =>
     moveStart(@)
     shiftVert(@, 1, @rows - 1, -1)
     mergeVert(@, 2, @rows, -1)
     shiftVert(@, 1, @rows - 1, -1)
-    moveEnd(@)
+    alignTiles(@)
 
   moveDown: =>
     moveStart(@)
     shiftVert(@, @rows, 2, 1)
     mergeVert(@, @rows - 1, 1, 1)
     shiftVert(@, @rows, 2, 1)
-    moveEnd(@)
+    alignTiles(@)
 
-  update: (time, dt) =>
+  update: (dt, time) =>
+    if @moveEndTime > 0 and time >= @moveEndTime
+      @moveEndTime = 0
+      moveEnd(@)
+
     for cell in *@grid do
-      cell\update(time, dt)
+      cell\update(dt, time)
 
   draw: =>
     -- draw grid

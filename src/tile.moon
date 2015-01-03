@@ -24,8 +24,8 @@ class Tile
     @background = Colors[pow + 1]
     @textWidth = pow > 0 and Assets.numbers[pow]\getWidth! or 0
 
-  update: (time, dt) =>
-    @updateTweens(time, dt)
+  update: (dt, time) =>
+    @updateTweens(dt, time)
 
   draw: =>
     if @pow == 0
