@@ -22,6 +22,7 @@ mergeCell = (fromCell, toCell) =>
   if fromCell.pow != 0 and fromCell.pow == toCell.pow
     fromCell\setPow(fromCell.pow + 1)
     toCell\setPow(0)
+    fromCell\tween('scale', 1, 1.25, 0.2, 'bounce')
     @moveCount += 1
     @tileCount -= 1
     @emit('score', fromCell.value)

@@ -7,6 +7,7 @@ init = =>
 
 easing =
   linear: (fromVal, toVal, progress) -> fromVal + (toVal - fromVal) * progress
+  bounce: (fromVal, toVal, progress) -> fromVal + (toVal - fromVal) * math.sin(math.pi * progress)
 
 class Tweens
   tween: (prop, fromVal, toVal, duration, ease='linear') =>
