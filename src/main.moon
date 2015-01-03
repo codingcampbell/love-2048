@@ -36,7 +36,7 @@ love.draw = ->
   game\draw!
 
   graphics.setColor(255, 255, 255)
-  graphics.print(love.timer.getFPS!, Constants.GAME_WIDTH - 30, 0)
+  graphics.print(love.timer.getFPS!, Constants.GAME_WIDTH - 25, Constants.GAME_HEIGHT - 20, 0)
 
   graphics.setScissor()
 

@@ -1,6 +1,8 @@
 Constants = require 'constants'
 Colors = require 'colors'
 Tile = require 'tile'
+Util = require 'util'
+Events = require 'events'
 local graphics, random, cellSize, cellOffset
 
 getCell = (x, y) => @grid[(y - 1) * @cols + x]
@@ -22,6 +24,7 @@ mergeCell = (fromCell, toCell) =>
     toCell\setPow(0)
     @moveCount += 1
     @tileCount -= 1
+    @emit('score', fromCell.value)
 
 spawnRandomCell = =>
   getRandomEmptyCell(@)\setPow(random(1, 2))
@@ -151,3 +154,6 @@ class Grid
     -- draw cells
     for cell in *@grid do
       cell\draw!
+
+Util.mixin(Grid, Events)
+return Grid
