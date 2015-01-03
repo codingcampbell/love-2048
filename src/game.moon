@@ -23,6 +23,7 @@ class Game
       setScore(@, @score + score)
 
   update: (dt, time) =>
+    @grid\update(dt, time)
 
   draw: =>
     graphics.setBackgroundColor(Colors.background)

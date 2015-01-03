@@ -147,6 +147,10 @@ class Grid
     shiftVert(@, @rows, 2, 1)
     moveEnd(@)
 
+  update: (time, dt) =>
+    for cell in *@grid do
+      cell\update(time, dt)
+
   draw: =>
     -- draw grid
     graphics.setColor(Colors[1])

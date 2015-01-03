@@ -1,6 +1,8 @@
 Assets = require 'assets'
 Colors = require 'colors'
 Constants = require 'constants'
+Tweens = require 'tweens'
+Util = require 'util'
 local graphics, cellSize, floor
 
 class Tile
@@ -22,6 +24,9 @@ class Tile
     @background = Colors[pow + 1]
     @textWidth = pow > 0 and Assets.numbers[pow]\getWidth! or 0
 
+  update: (time, dt) =>
+    @updateTweens(time, dt)
+
   draw: =>
     if @pow == 0
       return
@@ -37,3 +42,6 @@ class Tile
     graphics.draw(Assets.numbers[@pow], floor((cellSize - @textWidth) / 2), floor((cellSize / 2) - 5))
 
     graphics.pop!
+
+Util.mixin(Tile, Tweens)
+return Tile
