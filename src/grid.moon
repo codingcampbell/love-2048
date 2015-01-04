@@ -1,3 +1,4 @@
+Assets = require 'assets'
 Constants = require 'constants'
 Colors = require 'colors'
 Tile = require 'tile'
@@ -25,6 +26,7 @@ mergeCell = (fromCell, toCell) =>
     fromCell\tween('scale', 1, 1.25, 0.2, 'bounce')
     @moveCount += 1
     @tileCount -= 1
+    @tilePromoted = true
     @emit('score', fromCell.value)
 
 spawnRandomCell = =>
@@ -62,6 +64,12 @@ alignTiles = =>
   duration = 0.1
   @moveEndTime = timer.getTime! + duration
 
+  if @moveCount > 0
+    Assets\play('move')
+
+  if @tilePromoted
+    Assets\play('score')
+
   for y = 1, @rows
     for x = 1, @cols
       cell = getCell(@, x, y)
@@ -93,6 +101,7 @@ isGameOver = =>
 
 moveStart = =>
   @moveCount = 0
+  @tilePromoted = false
 
 moveEnd = =>
   if @moveCount > 0
@@ -114,6 +123,7 @@ class Grid
     @cols = cols
     @rows = rows
     @grid = {}
+    @tilePromoted = false
     @moveCount = 0
     @tileCount = 0
     @gameOver = false
