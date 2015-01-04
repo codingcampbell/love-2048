@@ -4,7 +4,7 @@ Constants = require 'constants'
 Grid = require 'grid'
 Util = require 'util'
 
-local graphics
+local graphics, keyboard
 
 setScore = (score) =>
   @score = score
@@ -12,13 +12,10 @@ setScore = (score) =>
 
 class Game
   new: =>
-    import graphics from love
+    import graphics, keyboard from love
 
     Assets\load!
     graphics.setFont(Assets.font)
-
-    @locked = false
-    setScore(@, 0)
 
     @grid = Grid(4, 4)
 
@@ -28,7 +25,13 @@ class Game
     @grid\on 'moveEnd', ->
       @locked = false
 
+    @reset!
     @load!
+
+  reset: =>
+    @locked = false
+    setScore(@, 0)
+    @grid\reset!
 
   save: =>
     data = Util.serialize({
@@ -69,6 +72,10 @@ class Game
     graphics.print(@score, panelX + math.floor((panelWidth - @scoreWidth) / 2), 20)
 
   keypressed: (key) =>
+    if key == 'tab' or key == 'backspace'
+      if keyboard.isDown('tab') and keyboard.isDown('backspace')
+        @reset!
+
     if @locked
       return
 

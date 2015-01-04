@@ -128,12 +128,15 @@ class Grid
     @cols = cols
     @rows = rows
     @grid = {}
+
+    @reset!
+
+  reset: =>
     @tilePromoted = false
     @moveCount = 0
     @tileCount = 0
     @gameOver = false
     @moveEndTime = 0
-
     emptyGrid(@)
 
     for x = 1, 2
@@ -153,7 +156,9 @@ class Grid
 
   deserialize: (gridString) =>
     Assets\play('score')
+    @reset!
     emptyGrid(@)
+
     count = 1
     for num in gridString\gmatch('%d%d')
       @grid[count]\setPow(tonumber(num, 10))
