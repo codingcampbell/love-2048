@@ -6,9 +6,9 @@ Util = require 'util'
 
 local graphics, keyboard
 
-setScore = (score) =>
-  @score = score
-  @scoreWidth = Assets.font\getWidth(tostring(@score))
+setScore = (score, value) =>
+  score.value = value
+  score.width = Assets.font\getWidth(tostring(value))
 
 class Game
   new: =>
@@ -17,10 +17,18 @@ class Game
     Assets\load!
     graphics.setFont(Assets.font)
 
+    @scores =
+      current: {}
+      best: { value: 0 }
+
     @grid = Grid(4, 4)
 
     @grid\on 'score', (score) ->
-      setScore(@, @score + score)
+      totalScore = @scores.current.value + score
+      setScore(@, @scores.current, totalScore)
+
+      if totalScore > @scores.best.value
+        setScore(@, @scores.best, totalScore)
 
     @grid\on 'moveEnd', ->
       @locked = false
@@ -30,12 +38,14 @@ class Game
 
   reset: =>
     @locked = false
-    setScore(@, 0)
+    setScore(@, @scores.current, 0)
+    setScore(@, @scores.best, @scores.best.value)
     @grid\reset!
 
   save: =>
     data = Util.serialize({
-      score: @score
+      score: @scores.current.value
+      best: @scores.best.value
       grid: @grid\serialize!
     })
 
@@ -49,7 +59,10 @@ class Game
     state = Util.deserialize(data)
 
     if state.score
-      setScore(@, state.score)
+      setScore(@, @scores.current, tonumber(state.score))
+
+    if state.best
+      setScore(@, @scores.best, tonumber(state.best))
 
     if state.grid
       @grid\deserialize(state.grid)
@@ -66,10 +79,16 @@ class Game
 
     panelX = @grid.cols * Constants.CELL_SIZE + (@grid.cols) * Constants.CELL_MARGIN
     panelWidth = Constants.GAME_WIDTH - panelX
+
     graphics.setColor(Colors.text)
     graphics.print('Score', Constants.GAME_WIDTH - 70, 2)
     graphics.setColor(255, 255, 255)
-    graphics.print(@score, panelX + math.floor((panelWidth - @scoreWidth) / 2), 20)
+    graphics.print(@scores.current.value, panelX + math.floor((panelWidth - @scores.current.width) / 2), 20)
+
+    graphics.setColor(Colors.text)
+    graphics.print('Best', Constants.GAME_WIDTH - 63, 50)
+    graphics.setColor(255, 255, 255)
+    graphics.print(@scores.best.value, panelX + math.floor((panelWidth - @scores.best.width) / 2), 70)
 
   keypressed: (key) =>
     if key == 'tab' or key == 'backspace'
