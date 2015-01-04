@@ -28,6 +28,29 @@ class Game
     @grid\on 'moveEnd', ->
       @locked = false
 
+    @load!
+
+  save: =>
+    data = Util.serialize({
+      score: @score
+      grid: @grid\serialize!
+    })
+
+    love.filesystem.write('data.sav', data, #data)
+
+  load: =>
+    data = love.filesystem.read('data.sav')
+    if data == nil
+      return
+
+    state = Util.deserialize(data)
+
+    if state.score
+      setScore(@, state.score)
+
+    if state.grid
+      @grid\deserialize(state.grid)
+
   update: (dt, time) =>
     @grid\update(dt, time)
 

@@ -6,6 +6,11 @@ Util = require 'util'
 Events = require 'events'
 local graphics, timer, random, cellSize, cellOffset
 
+emptyGrid = =>
+  for y = 1, @rows
+    for x = 1, @cols
+      @grid[(y - 1) * @cols + x] = Tile(0, (x - 1) * cellOffset, (y - 1) * cellOffset)
+
 getCell = (x, y) => @grid[(y - 1) * @cols + x]
 
 getRandomEmptyCell = =>
@@ -129,12 +134,31 @@ class Grid
     @gameOver = false
     @moveEndTime = 0
 
-    for y = 1, rows
-      for x = 1, cols
-        @grid[(y - 1) * cols + x] = Tile(0, (x - 1) * cellOffset, (y - 1) * cellOffset)
+    emptyGrid(@)
 
     for x = 1, 2
       spawnRandomCell(@)
+
+  serialize: =>
+    local pow
+    result = {}
+    for cell in *@grid do
+      pow = tostring(cell.pow)
+      if #pow < 2
+        pow = '0' .. pow
+
+      table.insert(result, pow)
+
+    return table.concat(result, '')
+
+  deserialize: (gridString) =>
+    Assets\play('score')
+    emptyGrid(@)
+    count = 1
+    for num in gridString\gmatch('%d%d')
+      @grid[count]\setPow(tonumber(num, 10))
+      @grid[count]\tween('scale', 0.1, 1, 0.2)
+      count += 1
 
   moveLeft: =>
     moveStart(@)

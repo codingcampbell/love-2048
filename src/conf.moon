@@ -1,6 +1,8 @@
 Constants = require 'constants'
 
 love.conf = (t) ->
+  t.identity = 'net.mattcampbell.2048'
+
   with t.window
     .title = '2048'
     .width = Constants.GAME_WIDTH

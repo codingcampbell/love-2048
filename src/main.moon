@@ -21,6 +21,10 @@ love.load = ->
 
   game = Game!
 
+love.quit = ->
+  game\save!
+  return false
+
 love.resize = resize
 
 love.update = (dt) ->
