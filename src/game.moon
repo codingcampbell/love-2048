@@ -22,10 +22,10 @@ class Game
 
     @grid = Grid(4, 4)
 
-    @grid\on 'score', Util.bind @, (score) =>
+    @grid\on 'score', (score) ->
       setScore(@, @score + score)
 
-    @grid\on 'moveEnd', Util.bind @, =>
+    @grid\on 'moveEnd', ->
       @locked = false
 
   update: (dt, time) =>
