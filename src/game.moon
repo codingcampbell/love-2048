@@ -59,10 +59,10 @@ class Game
     state = Util.deserialize(data)
 
     if state.score
-      setScore(@, @scores.current, tonumber(state.score))
+      setScore(@, @scores.current, tonumber(state.score) or 0)
 
     if state.best
-      setScore(@, @scores.best, tonumber(state.best))
+      setScore(@, @scores.best, tonumber(state.best) or 0)
 
     if state.grid
       @grid\deserialize(state.grid)

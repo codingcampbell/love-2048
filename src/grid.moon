@@ -158,12 +158,26 @@ class Grid
     Assets\play('score')
     @reset!
     emptyGrid(@)
+    numCells = @rows * @cols
 
     count = 1
     for num in gridString\gmatch('%d%d')
-      @grid[count]\setPow(tonumber(num, 10))
-      @grid[count]\tween('scale', 0.1, 1, 0.2)
+      if count > numCells
+        count += 1
+        break
+
+      pow = tonumber(num, 10) or 0
+      @grid[count]\setPow(pow)
+
+      if pow > 0
+        @grid[count]\tween('scale', 0.1, 1, 0.2)
+        @tileCount += 1
+
       count += 1
+
+    if count - 1 != @cols * @rows
+      -- This was invalid data
+      @reset!
 
   moveLeft: =>
     moveStart(@)
