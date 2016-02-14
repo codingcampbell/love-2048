@@ -17,7 +17,7 @@ resize = (w, h) ->
 
 love.load = ->
   graphics.setDefaultFilter('linear', 'nearest')
-  resize(love.window.getWidth!, love.window.getHeight!)
+  resize(love.window.getMode())
 
   game = Game!
 

@@ -72,7 +72,7 @@ class Game
 
   draw: =>
     graphics.setBackgroundColor(Colors.background)
-    graphics.clear!
+    graphics.clear(Colors.background)
     graphics.translate(5, 5)
     @grid\draw!
     graphics.translate(-5, -5)
